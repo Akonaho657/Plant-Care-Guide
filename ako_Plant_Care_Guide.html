@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌿 Plant Care Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: linear-gradient(135deg,#e0f7fa,#f1f8e9);
+  --glass: rgba(255,255,255,0.08);
+  --accent1:#66bb6a;
+  --accent2:#8e24aa;
+  --rounded:20px;
+  --text:#1b4332;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
+body{
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:40px 15px;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+
+h1{
+  font-size:2.8rem;
+  margin-bottom:10px;
+  color:var(--accent1);
+  text-shadow: 1px 1px 6px rgba(0,0,0,0.2);
+}
+p.label{
+  margin-bottom:30px;
+  font-size:1rem;
+  color:var(--text);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:25px;
+  width:100%;
+  max-width:1000px;
+}
+
+/* Glassy card container */
+.plant-card{
+  perspective:1200px;
+  opacity:0;
+  transform:translateY(20px);
+  animation:fadeInUp 0.6s forwards;
+}
+
+@keyframes fadeInUp{to{opacity:1;transform:translateY(0);}}
+
+.card-inner{
+  position:relative;
+  width:100%;
+  padding-top:130%;
+  transform-style:preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.4,0,0.2,1);
+  cursor:pointer;
+  border-radius:var(--rounded);
+}
+
+.card-inner.flipped{transform:rotateY(180deg);}
+
+.card-front, .card-back{
+  position:absolute;
+  top:0; left:0;
+  width:100%; height:100%;
+  border-radius:var(--rounded);
+  backface-visibility:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  font-weight:600;
+  box-shadow:0 12px 25px rgba(0,0,0,0.2);
+  transition: transform 0.3s;
+}
+
+/* Front */
+.card-front{
+  background:var(--glass);
+  backdrop-filter:blur(12px);
+  color:var(--text);
+}
+.card-front:hover{transform:scale(1.05);}
+
+/* Back */
+.card-back{
+  background:linear-gradient(135deg,var(--accent2),#d81b60);
+  color:white;
+  transform:rotateY(180deg);
+  font-size:1rem;
+  padding:20px;
+  text-align:left;
+}
+
+.plant-name{
+  font-size:1.4rem;
+  margin-bottom:8px;
+}
+
+.plant-info p{
+  margin:6px 0;
+}
+
+/* Floating circles for background */
+.bg-shape{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(60px);
+  opacity:0.08;
+  z-index:-1;
+}
+.bg-shape1{width:400px;height:400px;top:-80px;right:-120px;background:radial-gradient(circle at 20% 20%, #66bb6a, transparent);}
+.bg-shape2{width:520px;height:520px;bottom:-140px;left:-160px;background:radial-gradient(circle at 60% 60%, #8e24aa, transparent);}
+</style>
+</head>
+<body>
+
+<div class="bg-shape bg-shape1"></div>
+<div class="bg-shape bg-shape2"></div>
+
+<h1>🌿 Plant Care Guide</h1>
+<p class="label">Click a plant card to see watering, sunlight, and tips!</p>
+
+<div class="grid" id="plantGrid"></div>
+
+<script>
+const plants=[
+  {name:'Aloe Vera', water:'Once every 3 weeks', sunlight:'Indirect sunlight', tips:'Great for burns and air purification.'},
+  {name:'Spider Plant', water:'Once a week', sunlight:'Bright, indirect light', tips:'Very easy to care for, good for beginners.'},
+  {name:'Peace Lily', water:'Twice a week', sunlight:'Low to medium light', tips:'Removes toxins from air.'},
+  {name:'Bamboo Palm', water:'Once a week', sunlight:'Indirect sunlight', tips:'Thrives in humidity.'},
+  {name:'Snake Plant', water:'Once every 2-3 weeks', sunlight:'Low to bright light', tips:'Very resilient and air-purifying.'},
+  {name:'Succulent Mix', water:'Every 2 weeks', sunlight:'Bright light', tips:'Let soil dry completely before watering.'}
+];
+
+const grid=document.getElementById('plantGrid');
+
+plants.forEach((plant,i)=>{
+  const card=document.createElement('div');
+  card.className='plant-card';
+  card.style.animationDelay=(i*0.12)+'s';
+
+  card.innerHTML=`
+    <div class="card-inner">
+      <div class="card-front">
+        <div class="plant-name">${plant.name}</div>
+        <div>🌱 Click to view care info</div>
+      </div>
+      <div class="card-back">
+        <div class="plant-name">${plant.name}</div>
+        <div class="plant-info">
+          <p><strong>Water:</strong> ${plant.water}</p>
+          <p><strong>Sunlight:</strong> ${plant.sunlight}</p>
+          <p><strong>Tips:</strong> ${plant.tips}</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const inner=card.querySelector('.card-inner');
+  card.addEventListener('click',()=>{inner.classList.toggle('flipped');});
+  grid.appendChild(card);
+});
+</script>
+
+</body>
+</html>
